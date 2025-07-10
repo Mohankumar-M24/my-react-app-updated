@@ -54,7 +54,7 @@ export default function EditProduct() {
         formData.append('category', form.category);
         formData.append('image', image);
 
-        await axios.put(`https://backend-new-1-x36j.onrender.com/api/products/${form._id}`, formData, {
+        await axios.put(`https://backend-new-2-6l36.onrender.com/api/products/${form._id}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -62,7 +62,7 @@ export default function EditProduct() {
         });
       } else {
         // No image change
-        await axios.put(`https://backend-new-1-x36j.onrender.com/api/products/${form._id}`, form, {
+        await axios.put(`https://backend-new-2-6l36.onrender.com/api/products/${form._id}`, form, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

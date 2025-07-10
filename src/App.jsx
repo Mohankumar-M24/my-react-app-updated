@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    axios.get('https://backend-new-1-x36j.onrender.com/api/health')
+    axios.get('https://backend-new-2-6l36.onrender.com/api/health')
       .then(() => console.log(' Frontend connected to backend'))
       .catch((err) => {
         console.error(' Backend connection failed:', err);

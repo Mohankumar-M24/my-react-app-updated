@@ -22,7 +22,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post('https://backend-new-1-x36j.onrender.com/api/auth/login', form);
+      const res = await axios.post('https://backend-new-2-6l36.onrender.com/api/auth/login', form);
 
       const { token, role, userId } = res.data;
 

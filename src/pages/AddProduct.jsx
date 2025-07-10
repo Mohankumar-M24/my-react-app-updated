@@ -32,7 +32,7 @@ export default function AddProduct() {
     formData.append('image', image);
 
     try {
-      await axios.post('https://backend-new-1-x36j.onrender.com/api/products', formData,  {
+      await axios.post('https://backend-new-2-6l36.onrender.com/api/products', formData,  {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'

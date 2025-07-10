@@ -11,7 +11,7 @@ export default function SellerProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('https://backend-new-1-x36j.onrender.com/api/products', {
+        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/products', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -32,7 +32,7 @@ export default function SellerProductList() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://backend-new-1-x36j.onrender.com/api/products/${id}`, {
+      await axios.delete(`https://backend-new-2-6l36.onrender.com/api/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -58,7 +58,7 @@ export default function SellerProductList() {
               className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
             >
               <img
-                src={`https://backend-new-1-x36j.onrender.com${product.image}`}
+                src={`https://backend-new-2-6l36.onrender.com${product.image}`}
                 alt={product.name}
                 className="w-full h-40 object-cover rounded mb-3"
               />

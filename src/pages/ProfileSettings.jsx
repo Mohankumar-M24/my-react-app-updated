@@ -12,7 +12,7 @@ export default function ProfileSettings() {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('https://backend-new-1-x36j.onrender.com/api/profile/me', {
+        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/profile/me', {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
@@ -44,7 +44,7 @@ export default function ProfileSettings() {
         formData.append('email', user.email);
         formData.append('avatar', avatar);
 
-        res = await axios.put('https://backend-new-1-x36j.onrender.com/api/profile/me', formData, {
+        res = await axios.put('https://backend-new-2-6l36.onrender.com/api/profile/me', formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -53,7 +53,7 @@ export default function ProfileSettings() {
         });
       } else {
         res = await axios.put(
-          'https://backend-new-1-x36j.onrender.com/api/profile/me',
+          'https://backend-new-2-6l36.onrender.com/api/profile/me',
           { name: user.name, email: user.email },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -85,7 +85,7 @@ export default function ProfileSettings() {
 
     try {
       await axios.put(
-        'https://backend-new-1-x36j.onrender.com/api/profile/change-password',
+        'https://backend-new-2-6l36.onrender.com/api/profile/change-password',
         { currentPassword, newPassword },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -122,7 +122,7 @@ export default function ProfileSettings() {
 
       {user.avatar && (
         <img
-          src={`https://backend-new-1-x36j.onrender.com${user.avatar}`}
+          src={`https://backend-new-2-6l36.onrender.com${user.avatar}`}
           alt="Avatar"
           className="w-24 h-24 rounded-full object-cover mb-3"
           onError={(e) => {

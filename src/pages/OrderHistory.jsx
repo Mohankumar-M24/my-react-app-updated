@@ -8,7 +8,7 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('https://backend-new-1-x36j.onrender.com/api/orders/my-orders', {
+        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/orders/my-orders', {
           withCredentials: true,
         });
         setOrders(res.data);

@@ -32,7 +32,7 @@ const Checkout = () => {
     try {
       // Step 1: Create Razorpay order
       const razorpayRes = await axios.post(
-        'https://backend-new-1-x36j.onrender.com/api/payments/create-order',
+        'https://backend-new-2-6l36.onrender.com/api/payments/create-order',
         { amount: totalPrice }
       );
 
@@ -50,7 +50,7 @@ const Checkout = () => {
           try {
             // Step 3: Save order in backend
             const saveRes = await axios.post(
-              'https://backend-new-1-x36j.onrender.com/api/orders',
+              'https://backend-new-2-6l36.onrender.com/api/orders',
               {
                 orderItems: cart.map((item) => ({
                   product: item._id,

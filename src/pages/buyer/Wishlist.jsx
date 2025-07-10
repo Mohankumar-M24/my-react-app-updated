@@ -28,7 +28,7 @@ const Wishlist = () => {
           {wishlist.map((item) => (
             <div key={item._id} className="border rounded p-4 shadow">
               <img
-                src={`https://backend-new-1-x36j.onrender.com${item.image}`}
+                src={`https://backend-new-2-6l36.onrender.com${item.image}`}
                 alt={item.name}
                 className="w-full h-40 object-cover mb-3"
                 onError={(e) => (e.target.style.display = 'none')}

@@ -18,7 +18,7 @@ const ProductDetails = () => {
   // to fetch product details
   useEffect(() => {
     axios
-      .get(`https://backend-new-1-x36j.onrender.com/api/products/${id}`)
+      .get(`https://backend-new-2-6l36.onrender.com/api/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.error('Failed to load product', err));
   }, [id, refresh]);
@@ -27,7 +27,7 @@ const ProductDetails = () => {
   const submitReview = async () => {
     try {
       const res = await axios.post(
-        `https://backend-new-1-x36j.onrender.com/api/products/${id}/reviews`,
+        `https://backend-new-2-6l36.onrender.com/api/products/${id}/reviews`,
         { rating, comment },
         { withCredentials: true }
       );
@@ -47,7 +47,7 @@ const ProductDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <img
-          src={`https://backend-new-1-x36j.onrender.com/${product.image}`}
+          src={`https://backend-new-2-6l36.onrender.com/${product.image}`}
           alt={product.name}
           className="w-full h-96 object-cover rounded"
         />

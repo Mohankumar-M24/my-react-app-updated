@@ -25,7 +25,7 @@ const SellerStore = () => {
     const fetchStore = async () => {
       if (!token) return;
       try {
-        const res = await axios.get('https://backend-new-1-x36j.onrender.com/api/store/me', {
+        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/store/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

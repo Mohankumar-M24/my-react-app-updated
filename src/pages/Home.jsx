@@ -22,7 +22,7 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       const params = new URLSearchParams(filters);
-      const res = await axios.get(`https://backend-new-1-x36j.onrender.com/api/products?${params}`);
+      const res = await axios.get(`https://backend-new-2-6l36.onrender.com/api/products?${params}`);
       setProducts(res.data);
     } catch (err) {
       console.error(' Failed to fetch products', err);
@@ -105,7 +105,7 @@ export default function Home() {
         {products.map((product) => (
           <div key={product._id} className="bg-white p-4 rounded shadow">
             <img
-              src={`https://backend-new-1-x36j.onrender.com${product.image}`}
+              src={`https://backend-new-2-6l36.onrender.com${product.image}`}
               alt={product.name}
               className="w-full h-48 object-cover mb-2"
               onError={(e) => (e.target.style.display = 'none')}

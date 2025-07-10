@@ -15,7 +15,7 @@ const SellerOrders = () => {
       }
 
       try {
-        const res = await axios.get('https://backend-new-1-x36j.onrender.com/api/seller/orders', {
+        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/seller/orders', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -33,7 +33,7 @@ const SellerOrders = () => {
   const handleMarkShipped = async (orderId, itemId) => {
     try {
       await axios.put(
-        `https://backend-new-1-x36j.onrender.com/api/seller/orders/${orderId}/items/${itemId}/status`,
+        `https://backend-new-2-6l36.onrender.com/api/seller/orders/${orderId}/items/${itemId}/status`,
         { status: 'Shipped' },
         {
           headers: {

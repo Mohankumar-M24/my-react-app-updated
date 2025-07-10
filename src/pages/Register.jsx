@@ -16,7 +16,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://backend-new-1-x36j.onrender.com/api/auth/register', form);
+      const res = await axios.post('https://backend-new-2-6l36.onrender.com/api/auth/register', form);
       const { token, role, userId } = res.data;
 
       //  to pass all required info into context
