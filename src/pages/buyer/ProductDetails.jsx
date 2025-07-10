@@ -47,7 +47,7 @@ const ProductDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <img
-          src={`https://backend-new-1-x36j.onrender.com${product.image}`}
+          src={`https://backend-new-1-x36j.onrender.com/${product.image}`}
           alt={product.name}
           className="w-full h-96 object-cover rounded"
         />
