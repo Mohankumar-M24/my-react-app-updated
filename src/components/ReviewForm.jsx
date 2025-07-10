@@ -10,10 +10,11 @@ const ReviewForm = ({ productId, token, onReviewAdded }) => {
     e.preventDefault();
     try {
       await axios.post(
-        `/api/products/${productId}/reviews`,
+        `https://backend-new-2-6l36.onrender.com/api/products/${productId}/reviews`,
         { rating, comment },
         {
           headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         }
       );
       setMessage('Review added!');

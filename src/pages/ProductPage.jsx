@@ -12,8 +12,15 @@ const ProductPage = () => {
   const [message, setMessage] = useState('');
 
   const fetchProduct = async () => {
-    const res = await axios.get(`/api/products/${id}`);
-    setProduct(res.data);
+    try {
+      const res = await axios.get(
+        `https://backend-new-2-6l36.onrender.com/api/products/${id}`,
+        { withCredentials: true }
+      );
+      setProduct(res.data);
+    } catch (err) {
+      console.error('Error fetching product:', err);
+    }
   };
 
   useEffect(() => {
@@ -24,12 +31,13 @@ const ProductPage = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `/api/products/${id}/reviews`,
+        `https://backend-new-2-6l36.onrender.com/api/products/${id}/reviews`,
         { rating, comment },
         {
           headers: {
             Authorization: `Bearer ${userInfo?.token}`,
           },
+          withCredentials: true,
         }
       );
       setMessage('Review added!');
@@ -46,7 +54,11 @@ const ProductPage = () => {
   return (
     <div className="max-w-3xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-      <img src={product.image} alt={product.name} className="w-full h-64 object-cover mb-4" />
+      <img
+        src={`https://backend-new-2-6l36.onrender.com/${product.image}`}
+        alt={product.name}
+        className="w-full h-64 object-cover mb-4"
+      />
       <p className="text-lg font-semibold">₹{product.price}</p>
       <p className="mt-2">{product.description}</p>
 

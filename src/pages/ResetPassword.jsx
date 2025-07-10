@@ -11,7 +11,7 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`/api/auth/reset-password/${token}`, { newPassword });
+      const res = await axios.post(`https://backend-new-2-6l36.onrender.com/api/auth/reset-password/${token}`, { newPassword });
       toast.success(res.data.message);
       navigate('/login');
     } catch (err) {

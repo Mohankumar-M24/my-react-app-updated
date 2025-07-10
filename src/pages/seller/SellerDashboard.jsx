@@ -10,11 +10,15 @@ export default function SellerDashboard() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await axios.get("/api/seller/orders", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const { data } = await axios.get(
+          `https://backend-new-2-6l36.onrender.com/api/seller/orders`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            withCredentials: true,
+          }
+        );
 
         setOrders(data.orders);
         setTotalOrders(data.orders.length);
@@ -40,14 +44,16 @@ export default function SellerDashboard() {
   const handleStatusChange = async (orderId, itemIndex, newStatus) => {
     try {
       await axios.put(
-        `/api/seller/orders/${orderId}/item/${itemIndex}/status`,
+        `https://backend-new-2-6l36.onrender.com/api/seller/orders/${orderId}/item/${itemIndex}/status`,
         { newStatus },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
+          withCredentials: true,
         }
       );
+
       // Refresh UI
       const updatedOrders = [...orders];
       updatedOrders.forEach((order) => {
@@ -104,7 +110,9 @@ export default function SellerDashboard() {
           >
             <p className="font-semibold">Order ID: {order._id}</p>
             <p>Placed At: {new Date(order.createdAt).toLocaleString()}</p>
-            <p>Status: <span className="font-medium">{order.status}</span></p>
+            <p>
+              Status: <span className="font-medium">{order.status}</span>
+            </p>
             <div className="mt-2">
               <p className="font-medium">Items:</p>
               <ul className="ml-4 list-disc">
