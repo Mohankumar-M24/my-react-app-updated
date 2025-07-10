@@ -1,5 +1,5 @@
-import { useState } from 'react'; 
-import axios from 'axios';
+import { useState } from 'react';
+import api from '../api';
 import { toast } from 'react-toastify';
 
 export default function ForgotPassword() {
@@ -8,11 +8,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        'https://backend-new-2-6l36.onrender.com/api/auth/forgot-password',
-        { email },
-        { withCredentials: true } // if your backend uses cookies
-      );
+      const res = await api.post('/api/auth/forgot-password', { email });
       toast.success(res.data.message);
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to send reset link');
@@ -30,7 +26,9 @@ export default function ForgotPassword() {
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <button className="bg-blue-600 text-white px-4 py-2 rounded">Send Reset Link</button>
+      <button className="bg-blue-600 text-white px-4 py-2 rounded">
+        Send Reset Link
+      </button>
     </form>
   );
 }

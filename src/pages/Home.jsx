@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { AuthContext } from '../contexts/AuthContext';
 import { CartContext } from '../contexts/CartContext';
 import { WishlistContext } from '../contexts/WishlistContext';
@@ -22,7 +22,7 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       const params = new URLSearchParams(filters);
-      const res = await axios.get(`https://backend-new-2-6l36.onrender.com/api/products?${params}`);
+      const res = await api.get(`/api/products?${params}`);
       setProducts(res.data);
     } catch (err) {
       console.error(' Failed to fetch products', err);
@@ -41,21 +41,19 @@ export default function Home() {
     fetchProducts();
   };
 
-  const WishlistButton = ({ product }) => {
-    return (
-      <button onClick={() => toggleWishlist(product)} className="text-xl">
-        {isInWishlist(product._id) ? (
-          <FaHeart className="text-red-500" />
-        ) : (
-          <FaRegHeart className="text-gray-400 hover:text-red-500" />
-        )}
-      </button>
-    );
-  };
+  const WishlistButton = ({ product }) => (
+    <button onClick={() => toggleWishlist(product)} className="text-xl">
+      {isInWishlist(product._id) ? (
+        <FaHeart className="text-red-500" />
+      ) : (
+        <FaRegHeart className="text-gray-400 hover:text-red-500" />
+      )}
+    </button>
+  );
 
   return (
     <div className="p-4">
-      {/* Search & Filter UI */}
+      {/* Filter UI */}
       <div className="flex flex-wrap gap-3 mb-6">
         <input
           type="text"
@@ -105,21 +103,17 @@ export default function Home() {
         {products.map((product) => (
           <div key={product._id} className="bg-white p-4 rounded shadow">
             <img
-              src={`https://backend-new-2-6l36.onrender.com${product.image}`}
+              src={`${import.meta.env.VITE_API_URL}${product.image}`}
               alt={product.name}
               className="w-full h-48 object-cover mb-2"
               onError={(e) => (e.target.style.display = 'none')}
             />
-
-            {/* Product name is now a link to the detail page */}
             <Link to={`/product/${product._id}`}>
               <h2 className="text-lg font-semibold hover:underline">{product.name}</h2>
             </Link>
-
             <p className="text-gray-600 capitalize">{product.category}</p>
             <p className="text-green-600 font-bold">₹{product.price}</p>
 
-            {/* Show Add to Cart and Wishlist for logged in buyers only */}
             {isLoggedIn && role === 'buyer' && (
               <div className="flex items-center gap-2 mt-2">
                 <button

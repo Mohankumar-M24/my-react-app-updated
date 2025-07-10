@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api'; // ✅ Centralized API instance
 
 export default function SellerProductList() {
   const [products, setProducts] = useState([]);
@@ -11,7 +11,7 @@ export default function SellerProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/products', {
+        const res = await api.get('/api/products', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -27,20 +27,20 @@ export default function SellerProductList() {
 
   const handleEdit = (product) => {
     localStorage.setItem('productToEdit', JSON.stringify(product));
-    navigate('/dashboard/edit-product'); //  matches App.jsx route
+    navigate('/dashboard/edit-product');
   };
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://backend-new-2-6l36.onrender.com/api/products/${id}`, {
+      await api.delete(`/api/products/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       setProducts(products.filter(p => p._id !== id));
       alert('✅ Product deleted successfully!');
     } catch (error) {
-      console.error(' Delete failed:', error);
-      alert('Failed to delete product');
+      console.error('Delete failed:', error);
+      alert('❌ Failed to delete product');
     }
   };
 
@@ -58,12 +58,13 @@ export default function SellerProductList() {
               className="bg-white border p-4 rounded-lg shadow hover:shadow-md transition"
             >
               <img
-                src={`https://backend-new-2-6l36.onrender.com${product.image}`}
+                src={`${import.meta.env.VITE_API_URL}${product.image}`}
                 alt={product.name}
                 className="w-full h-40 object-cover rounded mb-3"
+                onError={(e) => (e.target.style.display = 'none')}
               />
               <h3 className="text-lg font-bold">{product.name}</h3>
-              <p className="text-gray-600 text-sm">{product.description}</p>
+              <p className="text-gray-600 text-sm line-clamp-2">{product.description}</p>
               <p className="text-green-600 mt-2 font-semibold">₹{product.price}</p>
 
               <div className="mt-4 flex justify-between">

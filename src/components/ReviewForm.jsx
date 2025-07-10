@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api'; 
 
 const ReviewForm = ({ productId, token, onReviewAdded }) => {
   const [rating, setRating] = useState(5);
@@ -9,12 +9,11 @@ const ReviewForm = ({ productId, token, onReviewAdded }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `https://backend-new-2-6l36.onrender.com/api/products/${productId}/reviews`,
+      await api.post(
+        `/api/products/${productId}/reviews`,
         { rating, comment },
         {
           headers: { Authorization: `Bearer ${token}` },
-          withCredentials: true,
         }
       );
       setMessage('Review added!');
@@ -32,7 +31,11 @@ const ReviewForm = ({ productId, token, onReviewAdded }) => {
 
       <div className="mt-2">
         <label className="block mb-1">Rating</label>
-        <select value={rating} onChange={(e) => setRating(e.target.value)} className="border p-1">
+        <select
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
+          className="border p-1"
+        >
           {[5, 4, 3, 2, 1].map((r) => (
             <option key={r} value={r}>
               {r} - {['Excellent', 'Good', 'Average', 'Poor', 'Terrible'][5 - r]}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api'; // ✅ Import centralized axios instance
 
 export default function EditProduct() {
   const navigate = useNavigate();
@@ -40,13 +40,10 @@ export default function EditProduct() {
   };
 
   const handleSubmit = async (e) => {
-    console.log("Submitting edit for:", form._id, form.name);
-
     e.preventDefault();
 
     try {
       if (image) {
-        // If new image uploaded, use FormData
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('description', form.description);
@@ -54,24 +51,25 @@ export default function EditProduct() {
         formData.append('category', form.category);
         formData.append('image', image);
 
-        await axios.put(`https://backend-new-2-6l36.onrender.com/api/products/${form._id}`, formData, {
+        await api.put(`/api/products/${form._id}`, formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         });
       } else {
-        // No image change
-        await axios.put(`https://backend-new-2-6l36.onrender.com/api/products/${form._id}`, form, {
-          headers: { Authorization: `Bearer ${token}` },
+        await api.put(`/api/products/${form._id}`, form, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
       }
 
-      alert(' Product updated successfully!');
+      alert('Product updated successfully!');
       navigate('/seller/products');
     } catch (err) {
       console.error(err);
-      alert(' Failed to update product');
+      alert('Failed to update product');
     }
   };
 

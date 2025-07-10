@@ -31,7 +31,7 @@ import BuyerDashboard from './pages/BuyerDashboard';
 import OrderHistory from './pages/buyer/OrderHistory';
 import ProfileSettings from './pages/ProfileSettings';
 import Wishlist from './pages/buyer/Wishlist';
-import ProductDetails from './pages/buyer/ProductDetails'; 
+import ProductDetails from './pages/buyer/ProductDetails';
 
 function App() {
   const { isLoggedIn, role } = useContext(AuthContext);
@@ -44,12 +44,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    axios.get('https://backend-new-2-6l36.onrender.com/api/health')
-      .then(() => console.log(' Frontend connected to backend'))
-      .catch((err) => {
-        console.error(' Backend connection failed:', err);
+    const checkBackend = async () => {
+      try {
+        await axios.get(`${import.meta.env.VITE_API_URL}/api/health`);
+        console.log('✅ Frontend connected to backend');
+      } catch (err) {
+        console.error('❌ Backend connection failed:', err);
         toast.error('❌ Failed to connect to backend');
-      });
+      }
+    };
+
+    checkBackend();
   }, []);
 
   return (
@@ -64,7 +69,6 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="checkout" element={<Checkout />} />
-          {/*  Product details route */}
           <Route path="product/:id" element={<ProductDetails />} />
         </Route>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api';
 import { toast } from 'react-toastify';
 
 export default function ProfileSettings() {
@@ -12,13 +12,13 @@ export default function ProfileSettings() {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
       try {
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/profile/me', {
+        const res = await api.get('/api/profile/me', {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
         setUser(res.data);
       } catch (err) {
-        console.error(' Failed to fetch profile', err);
+        console.error('Failed to fetch profile', err);
         toast.error('❌ Failed to load profile');
       }
     };
@@ -38,13 +38,14 @@ export default function ProfileSettings() {
     const token = localStorage.getItem('token');
     try {
       let res;
+
       if (avatar) {
         const formData = new FormData();
         formData.append('name', user.name);
         formData.append('email', user.email);
         formData.append('avatar', avatar);
 
-        res = await axios.put('https://backend-new-2-6l36.onrender.com/api/profile/me', formData, {
+        res = await api.put('/api/profile/me', formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -52,8 +53,8 @@ export default function ProfileSettings() {
           withCredentials: true,
         });
       } else {
-        res = await axios.put(
-          'https://backend-new-2-6l36.onrender.com/api/profile/me',
+        res = await api.put(
+          '/api/profile/me',
           { name: user.name, email: user.email },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -65,7 +66,7 @@ export default function ProfileSettings() {
       setUser(res.data);
       toast.success('✅ Profile updated successfully');
     } catch (err) {
-      console.error(' Failed to update profile:', err.response?.data || err.message);
+      console.error('Failed to update profile:', err.response?.data || err.message);
       toast.error('❌ Profile update failed');
     }
   };
@@ -84,8 +85,8 @@ export default function ProfileSettings() {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.put(
-        'https://backend-new-2-6l36.onrender.com/api/profile/change-password',
+      await api.put(
+        '/api/profile/change-password',
         { currentPassword, newPassword },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -96,7 +97,7 @@ export default function ProfileSettings() {
       toast.success('✅ Password updated successfully');
       setPasswords({ currentPassword: '', newPassword: '' });
     } catch (err) {
-      console.error(' Password change error:', err.response?.data || err.message);
+      console.error('Password change error:', err.response?.data || err.message);
       toast.error(err.response?.data?.message || 'Failed to change password');
     }
   };
@@ -122,16 +123,17 @@ export default function ProfileSettings() {
 
       {user.avatar && (
         <img
-          src={`https://backend-new-2-6l36.onrender.com${user.avatar}`}
+          src={`${import.meta.env.VITE_API_URL}${user.avatar}`}
           alt="Avatar"
           className="w-24 h-24 rounded-full object-cover mb-3"
           onError={(e) => {
-            e.target.src = '/default-avatar.png'; // fallback if image is broken
+            e.target.src = '/default-avatar.png';
           }}
         />
       )}
 
       <input type="file" onChange={handleAvatarUpload} className="mb-3" />
+
       <button
         onClick={handleSave}
         className="bg-blue-600 text-white px-4 py-2 rounded mb-6"
@@ -145,14 +147,18 @@ export default function ProfileSettings() {
       <input
         type="password"
         value={passwords.currentPassword}
-        onChange={(e) => setPasswords({ ...passwords, currentPassword: e.target.value })}
+        onChange={(e) =>
+          setPasswords({ ...passwords, currentPassword: e.target.value })
+        }
         className="w-full p-2 mb-3 border rounded"
         placeholder="Current Password"
       />
       <input
         type="password"
         value={passwords.newPassword}
-        onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
+        onChange={(e) =>
+          setPasswords({ ...passwords, newPassword: e.target.value })
+        }
         className="w-full p-2 mb-3 border rounded"
         placeholder="New Password"
       />

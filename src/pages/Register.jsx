@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
+import api from '../api'; // ✅ Use centralized API instance
 
 export default function Register() {
   const [form, setForm] = useState({
@@ -10,22 +10,23 @@ export default function Register() {
     password: '',
     role: 'buyer',
   });
+
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://backend-new-2-6l36.onrender.com/api/auth/register', form);
+      const res = await api.post('/api/auth/register', form);
       const { token, role, userId } = res.data;
 
-      //  to pass all required info into context
       login(token, role, userId);
 
-      //  and redirect based on role
+      // Redirect user based on their role
       navigate(role === 'seller' ? '/dashboard' : '/dashboard/buyer');
     } catch (err) {
-      alert('Registration failed: ' + (err.response?.data || err.message));
+      console.error('Registration error:', err);
+      alert('Registration failed: ' + (err.response?.data?.message || err.message));
     }
   };
 
@@ -67,7 +68,7 @@ export default function Register() {
         </select>
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
         >
           Register
         </button>

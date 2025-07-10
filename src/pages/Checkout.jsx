@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { CartContext } from '../contexts/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -30,17 +30,14 @@ const Checkout = () => {
     }
 
     try {
-      // Step 1: Create Razorpay order
-      const razorpayRes = await axios.post(
-        'https://backend-new-2-6l36.onrender.com/api/payments/create-order',
-        { amount: totalPrice }
-      );
+      const razorpayRes = await api.post('/api/payments/create-order', {
+        amount: totalPrice,
+      });
 
       const { order } = razorpayRes.data;
 
-      // Step 2: Open Razorpay popup
       const options = {
-        key: 'rzp_test_edEb6O2SLmxOzh', // Replace with your actual test/live key
+        key: 'rzp_test_edEb6O2SLmxOzh', // Replace if needed
         amount: order.amount,
         currency: order.currency,
         name: 'E-Commerce Checkout',
@@ -48,9 +45,8 @@ const Checkout = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            // Step 3: Save order in backend
-            const saveRes = await axios.post(
-              'https://backend-new-2-6l36.onrender.com/api/orders',
+            const saveRes = await api.post(
+              '/api/orders',
               {
                 orderItems: cart.map((item) => ({
                   product: item._id,
@@ -103,54 +99,17 @@ const Checkout = () => {
 
       {/* Shipping Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={shipping.name}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          value={shipping.phone}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={shipping.email}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={shipping.address}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          value={shipping.city}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="pincode"
-          placeholder="Pincode"
-          value={shipping.pincode}
-          onChange={handleChange}
-          className="p-2 border rounded"
-        />
+        {['name', 'phone', 'email', 'address', 'city', 'pincode'].map((field) => (
+          <input
+            key={field}
+            type={field === 'email' ? 'email' : 'text'}
+            name={field}
+            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+            value={shipping[field]}
+            onChange={handleChange}
+            className="p-2 border rounded"
+          />
+        ))}
       </div>
 
       {/* Cart Items */}

@@ -1,13 +1,11 @@
 import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api';
 import { AuthContext } from '../../contexts/AuthContext';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { isLoggedIn, role } = useContext(AuthContext);
-
-  console.log("AuthContext values:", { isLoggedIn, role });
 
   const [product, setProduct] = useState(null);
   const [rating, setRating] = useState(5);
@@ -15,19 +13,19 @@ const ProductDetails = () => {
   const [message, setMessage] = useState('');
   const [refresh, setRefresh] = useState(false);
 
-  // to fetch product details
+  // fetch product details
   useEffect(() => {
-    axios
-      .get(`https://backend-new-2-6l36.onrender.com/api/products/${id}`)
+    api
+      .get(`/api/products/${id}`)
       .then((res) => setProduct(res.data))
       .catch((err) => console.error('Failed to load product', err));
   }, [id, refresh]);
 
-  // Handle review submit
+  // handle review submit
   const submitReview = async () => {
     try {
-      const res = await axios.post(
-        `https://backend-new-2-6l36.onrender.com/api/products/${id}/reviews`,
+      const res = await api.post(
+        `/api/products/${id}/reviews`,
         { rating, comment },
         { withCredentials: true }
       );
@@ -47,7 +45,7 @@ const ProductDetails = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <img
-          src={`https://backend-new-2-6l36.onrender.com/${product.image}`}
+          src={`${import.meta.env.VITE_API_URL}/${product.image}`}
           alt={product.name}
           className="w-full h-96 object-cover rounded"
         />
@@ -98,7 +96,6 @@ const ProductDetails = () => {
           </button>
         </div>
       )}
-
 
       {/* Review List */}
       <div className="mt-10">

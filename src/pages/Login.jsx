@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,7 +7,6 @@ import { useAuth } from '../contexts/AuthContext';
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-
   const [form, setForm] = useState({ email: '', password: '' });
 
   const handleChange = (e) => {
@@ -22,16 +21,10 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post('https://backend-new-2-6l36.onrender.com/api/auth/login', form);
-
+      const res = await api.post('/api/auth/login', form);
       const { token, role, userId } = res.data;
-
-      // Save token, role, userId using context
       login(token, role, userId);
-
       toast.success('Logged in successfully');
-
-      // Navigate based on role
       navigate(role === 'seller' ? '/dashboard' : '/dashboard/buyer');
     } catch (err) {
       console.error('Login error:', err);

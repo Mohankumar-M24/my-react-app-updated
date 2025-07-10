@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import api from '../../api'; // ✅ Centralized axios instance
 
 const SellerOrders = () => {
   const { token, userId } = useAuth();
@@ -10,20 +10,19 @@ const SellerOrders = () => {
   useEffect(() => {
     const fetchSellerOrders = async () => {
       if (!token) {
-        console.warn(' No token found');
+        console.warn('No token found');
         return;
       }
 
       try {
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/seller/orders', {
+        const res = await api.get('/api/seller/orders', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
         setOrders(res.data.orders || []);
       } catch (err) {
-        console.error(' Failed to load seller orders:', err.response?.data || err.message);
+        console.error('Failed to load seller orders:', err.response?.data || err.message);
       }
     };
 
@@ -32,8 +31,8 @@ const SellerOrders = () => {
 
   const handleMarkShipped = async (orderId, itemId) => {
     try {
-      await axios.put(
-        `https://backend-new-2-6l36.onrender.com/api/seller/orders/${orderId}/items/${itemId}/status`,
+      await api.put(
+        `/api/seller/orders/${orderId}/items/${itemId}/status`,
         { status: 'Shipped' },
         {
           headers: {
@@ -42,15 +41,15 @@ const SellerOrders = () => {
         }
       );
 
-      toast.success(' Marked as shipped');
+      toast.success('✅ Marked as shipped');
 
-      // Update local state
-      setOrders(prevOrders =>
-        prevOrders.map(order =>
+      // Update state
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
           order._id === orderId
             ? {
                 ...order,
-                items: order.items.map(item =>
+                items: order.items.map((item) =>
                   item._id === itemId
                     ? { ...item, shippingStatus: 'Shipped' }
                     : item
@@ -60,8 +59,8 @@ const SellerOrders = () => {
         )
       );
     } catch (err) {
-      console.error(' Failed to update shipping status:', err);
-      toast.error('Failed to mark as shipped');
+      console.error('Failed to update shipping status:', err);
+      toast.error('❌ Failed to mark as shipped');
     }
   };
 
@@ -72,9 +71,9 @@ const SellerOrders = () => {
       {orders.length === 0 ? (
         <p>No orders found for your products.</p>
       ) : (
-        orders.map(order => {
+        orders.map((order) => {
           const sellerItems = order.items?.filter(
-            item => item.seller?.toString() === userId
+            (item) => item.seller?.toString() === userId
           );
 
           if (!sellerItems || sellerItems.length === 0) return null;
@@ -89,9 +88,16 @@ const SellerOrders = () => {
               key={order._id}
               className="border rounded p-4 mb-4 bg-white shadow-sm"
             >
-              <p><span className="font-semibold">Order ID:</span> {order._id}</p>
-              <p><span className="font-semibold">Buyer:</span> {order.user?.name} ({order.user?.email})</p>
-              <p><span className="font-semibold">Status:</span> {order.status}</p>
+              <p>
+                <span className="font-semibold">Order ID:</span> {order._id}
+              </p>
+              <p>
+                <span className="font-semibold">Buyer:</span>{' '}
+                {order.user?.name} ({order.user?.email})
+              </p>
+              <p>
+                <span className="font-semibold">Status:</span> {order.status}
+              </p>
               <p className="text-sm text-gray-500 mb-2">
                 Placed on: {new Date(order.createdAt).toLocaleDateString()}
               </p>

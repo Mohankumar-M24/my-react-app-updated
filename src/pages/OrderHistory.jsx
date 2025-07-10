@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api'; // ✅ centralized axios instance
 import { toast } from 'react-toastify';
 
 const OrderHistory = () => {
@@ -8,12 +8,12 @@ const OrderHistory = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/orders/my-orders', {
+        const res = await api.get('/api/orders/my-orders', {
           withCredentials: true,
         });
         setOrders(res.data);
       } catch (err) {
-        console.error(' Failed to fetch orders:', err);
+        console.error('Failed to fetch orders:', err);
         toast.error('Failed to load orders');
       }
     };
@@ -40,7 +40,8 @@ const OrderHistory = () => {
 
             <div className="mb-2 text-sm text-gray-700">
               <div>
-                <strong>Payment ID:</strong> {order.razorpay_payment_id || 'N/A'}
+                <strong>Payment ID:</strong>{' '}
+                {order.razorpay_payment_id || 'N/A'}
               </div>
               <div>
                 <strong>Status:</strong> {order.status}
@@ -53,7 +54,10 @@ const OrderHistory = () => {
             <div className="mb-2 text-sm text-gray-700">
               <strong>Shipping Info:</strong>
               <div>Name: {order.shippingInfo?.name}</div>
-              <div>Address: {order.shippingInfo?.address}, {order.shippingInfo?.city} - {order.shippingInfo?.pincode}</div>
+              <div>
+                Address: {order.shippingInfo?.address},{' '}
+                {order.shippingInfo?.city} - {order.shippingInfo?.pincode}
+              </div>
               <div>Phone: {order.shippingInfo?.phone}</div>
             </div>
 
@@ -62,7 +66,8 @@ const OrderHistory = () => {
               <ul className="list-disc list-inside">
                 {order.items.map((item, i) => (
                   <li key={i}>
-                    {item.name} × {item.quantity} = ₹{item.price * item.quantity}
+                    {item.name} × {item.quantity} = ₹
+                    {item.price * item.quantity}
                   </li>
                 ))}
               </ul>

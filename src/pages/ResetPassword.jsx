@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../api'; // ✅ Use centralized axios instance
 
 export default function ResetPassword() {
   const { token } = useParams();
@@ -11,10 +11,13 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`https://backend-new-2-6l36.onrender.com/api/auth/reset-password/${token}`, { newPassword });
+      const res = await api.post(`/api/auth/reset-password/${token}`, {
+        newPassword,
+      });
       toast.success(res.data.message);
       navigate('/login');
     } catch (err) {
+      console.error('Reset error:', err);
       toast.error(err.response?.data?.error || 'Reset failed');
     }
   };
@@ -30,7 +33,9 @@ export default function ResetPassword() {
         onChange={(e) => setNewPassword(e.target.value)}
         required
       />
-      <button className="bg-green-600 text-white px-4 py-2 rounded">Reset Password</button>
+      <button className="bg-green-600 text-white px-4 py-2 rounded">
+        Reset Password
+      </button>
     </form>
   );
 }

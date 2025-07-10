@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../api"; // ✅ centralized axios instance
 
 export default function SellerDashboard() {
   const [orders, setOrders] = useState([]);
@@ -10,15 +10,11 @@ export default function SellerDashboard() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const { data } = await axios.get(
-          `https://backend-new-2-6l36.onrender.com/api/seller/orders`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            withCredentials: true,
-          }
-        );
+        const { data } = await api.get("/api/seller/orders", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
         setOrders(data.orders);
         setTotalOrders(data.orders.length);
@@ -43,14 +39,13 @@ export default function SellerDashboard() {
 
   const handleStatusChange = async (orderId, itemIndex, newStatus) => {
     try {
-      await axios.put(
-        `https://backend-new-2-6l36.onrender.com/api/seller/orders/${orderId}/item/${itemIndex}/status`,
+      await api.put(
+        `/api/seller/orders/${orderId}/item/${itemIndex}/status`,
         { newStatus },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          withCredentials: true,
         }
       );
 

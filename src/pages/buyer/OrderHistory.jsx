@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api';
 import { useAuth } from '../../contexts/AuthContext';
 
 const OrderHistory = () => {
@@ -21,7 +21,7 @@ const OrderHistory = () => {
       try {
         //console.log(' Sending token from OrderHistory:', token);
 
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/orders/my-orders', {
+        const res = await api.get('/api/orders/my-orders', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

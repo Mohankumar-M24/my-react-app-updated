@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api'; // ✅ centralized axios instance
 import { AuthContext } from '../contexts/AuthContext';
 
 const ProductPage = () => {
@@ -13,10 +13,7 @@ const ProductPage = () => {
 
   const fetchProduct = async () => {
     try {
-      const res = await axios.get(
-        `https://backend-new-2-6l36.onrender.com/api/products/${id}`,
-        { withCredentials: true }
-      );
+      const res = await api.get(`/api/products/${id}`);
       setProduct(res.data);
     } catch (err) {
       console.error('Error fetching product:', err);
@@ -30,20 +27,19 @@ const ProductPage = () => {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `https://backend-new-2-6l36.onrender.com/api/products/${id}/reviews`,
+      await api.post(
+        `/api/products/${id}/reviews`,
         { rating, comment },
         {
           headers: {
             Authorization: `Bearer ${userInfo?.token}`,
           },
-          withCredentials: true,
         }
       );
-      setMessage('Review added!');
+      setMessage('✅ Review added!');
       setRating(5);
       setComment('');
-      fetchProduct();
+      fetchProduct(); // refresh product with new review
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error adding review');
     }
@@ -55,17 +51,18 @@ const ProductPage = () => {
     <div className="max-w-3xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
       <img
-        src={`https://backend-new-2-6l36.onrender.com/${product.image}`}
+        src={`${import.meta.env.VITE_API_URL}/${product.image}`}
         alt={product.name}
         className="w-full h-64 object-cover mb-4"
+        onError={(e) => (e.target.style.display = 'none')}
       />
       <p className="text-lg font-semibold">₹{product.price}</p>
       <p className="mt-2">{product.description}</p>
 
       <hr className="my-4" />
 
-      <h2 className="text-xl font-semibold">Customer Reviews</h2>
-      {product.reviews.length === 0 ? (
+      <h2 className="text-xl font-semibold mb-2">Customer Reviews</h2>
+      {product.reviews?.length === 0 ? (
         <p>No reviews yet.</p>
       ) : (
         product.reviews.map((r) => (
@@ -73,7 +70,9 @@ const ProductPage = () => {
             <p className="font-semibold">{r.name}</p>
             <p>⭐ {r.rating}/5</p>
             <p>{r.comment}</p>
-            <p className="text-sm text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(r.createdAt).toLocaleDateString()}
+            </p>
           </div>
         ))
       )}

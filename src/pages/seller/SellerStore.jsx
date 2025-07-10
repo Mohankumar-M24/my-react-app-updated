@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
+import api from '../../api'; // ✅ centralized axios instance
 
 const SellerStore = () => {
   const { token } = useAuth();
@@ -20,12 +20,13 @@ const SellerStore = () => {
 
   const [isExisting, setIsExisting] = useState(false);
 
-  // Load store info
+  // Load seller store data
   useEffect(() => {
     const fetchStore = async () => {
       if (!token) return;
+
       try {
-        const res = await axios.get('https://backend-new-2-6l36.onrender.com/api/store/me', {
+        const res = await api.get('/api/store/me', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -35,8 +36,9 @@ const SellerStore = () => {
         setIsExisting(true);
       } catch (err) {
         if (err.response?.status === 404) {
-          setIsExisting(false); // new store
+          setIsExisting(false); // No store exists yet
         } else {
+          console.error(err);
           toast.error('❌ Failed to load store');
         }
       }
@@ -45,9 +47,10 @@ const SellerStore = () => {
     fetchStore();
   }, [token]);
 
-  // Handle form field change
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     if (name === 'city' || name === 'pincode') {
       setStore((prev) => ({
         ...prev,
@@ -57,18 +60,22 @@ const SellerStore = () => {
         },
       }));
     } else {
-      setStore((prev) => ({ ...prev, [name]: value }));
+      setStore((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
+  // Submit store creation or update
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const url = isExisting ? '/api/store' : '/api/store';
+      const url = '/api/store';
       const method = isExisting ? 'put' : 'post';
 
-      const res = await axios[method](url, store, {
+      const res = await api[method](url, store, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
