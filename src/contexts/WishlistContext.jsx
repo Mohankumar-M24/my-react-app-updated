@@ -5,23 +5,29 @@ export const WishlistContext = createContext();
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
 
-  //  Load from localStorage once at startup
+  // ✅ Load wishlist from localStorage on startup
   useEffect(() => {
     const stored = localStorage.getItem('wishlist');
     if (stored) {
       try {
         setWishlist(JSON.parse(stored));
       } catch (e) {
-        console.error(' Failed to parse wishlist from localStorage');
+        console.error('❌ Failed to parse wishlist from localStorage:', e);
+        localStorage.removeItem('wishlist'); // fallback
       }
     }
   }, []);
 
-  //  Save to localStorage whenever wishlist changes
+  // ✅ Sync wishlist to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    try {
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    } catch (err) {
+      console.error('❌ Failed to store wishlist in localStorage:', err);
+    }
   }, [wishlist]);
 
+  // ✅ Add or remove item from wishlist
   const toggleWishlist = (product) => {
     setWishlist((prev) => {
       const exists = prev.find((item) => item._id === product._id);
@@ -31,6 +37,7 @@ export const WishlistProvider = ({ children }) => {
     });
   };
 
+  // ✅ Check if a product is in wishlist
   const isInWishlist = (id) => wishlist.some(item => item._id === id);
 
   return (
