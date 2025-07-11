@@ -103,11 +103,16 @@ export default function Home() {
         {products.map((product) => (
           <div key={product._id} className="bg-white p-4 rounded shadow">
             <img
-              src={`${import.meta.env.VITE_API_URL}${product.image}`}
-              alt={product.name}
-              className="w-full h-48 object-cover mb-2"
-              onError={(e) => (e.target.style.display = 'none')}
-            />
+  src={
+    product.image.startsWith('http')
+      ? product.image
+      : `${import.meta.env.VITE_API_URL}${product.image}`
+  }
+  alt={product.name}
+  className="w-full h-48 object-cover mb-2"
+  onError={(e) => (e.target.style.display = 'none')}
+/>
+
             <Link to={`/product/${product._id}`}>
               <h2 className="text-lg font-semibold hover:underline">{product.name}</h2>
             </Link>
