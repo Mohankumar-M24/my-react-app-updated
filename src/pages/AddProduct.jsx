@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import api from '../../api'; // ✅ Use your centralized API instance
+import api from '../api'; 
 
 export default function AddProduct() {
   const [form, setForm] = useState({

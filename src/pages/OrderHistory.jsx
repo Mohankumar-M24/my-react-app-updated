@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import api from '../../api'; // ✅ centralized axios instance
+import api from '../api'; // ✅ centralized axios instance
 import { toast } from 'react-toastify';
 
 const OrderHistory = () => {
